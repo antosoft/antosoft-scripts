@@ -1,0 +1,13 @@
+{
+  "name": "antosoft-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AntoSoft|Scripts para automatizar procesos varios",
+  "author": "Antonio da Silva <adsmicrosistemas@gmail.com> (https://adsmicrosistemas.com)",
+  "keywords": [
+    "antosoft scripts",
+    "antosoft application",
+    "AdS Microsistemas"
+  ],
+  "license": "ISC"
+}

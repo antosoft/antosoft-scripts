@@ -1,0 +1,22 @@
+# Creamos grupos
+group:create:antosoft::1000:
+group:create:adsmicrosistemas::1001:
+group:create:accounting::1002:
+group:create:management::1003:
+
+# Creamos usuarios
+user:create:antosoft:PassworD:1000:1000:Antonio da Silva:/home/antosoft:/bin/bash:::sudo:
+user:create:adsmicrosistemas:PassworD123:1001:1001:AdS Microsistemas:/home/antosoft:/bin/bash:::sudo:
+user:create:juanperez:Pass234:1002:1002:Juan Perez:/home/antosoft:/bin/bash::::
+user:create:elizabethshue:Passxxz:1003:1002:Elizabeth Shue:/home/antosoft:/bin/bash::::
+user:create:pamela:password565:1004:1003:Pamela Anderson:/home/antosoft:/bin/bash::::
+user:create:tom:passworxxx:1005:1000:Tom Cruise:/home/antosoft:/bin/bash:::sudo:
+
+# Modificamos usuario
+user:modify:antosoft:NewPassworD:1006:1000:Antonio da Silva:/home/antosoft:/bin/bash:newantosoft::sudo:
+
+# Eliminamos grupo
+group:delete:adsmicrosistemas:
+
+# Eliminamos usuario
+user:delete:adsmicrosistemas:
