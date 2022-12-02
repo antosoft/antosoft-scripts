@@ -1,0 +1,20 @@
+#---[begin: install_config setings]---
+sudor="";
+if [ $(id -u) -ne 0 ]; then
+  sudor="sudo "
+fi
+
+alias la="ls -la"
+alias ll="ls -l"
+alias rm="${sudor}rm -i"
+alias cp="${sudor}cp -i"
+alias mv="${sudor}mv -i"
+alias md="${sudor}mkdir -p"
+alias ne="${sudor}/usr/bin/nano"
+alias python="python3"
+alias k0s="${sudor}/usr/local/bin/k0s"
+
+if [[ "${sudor}" != "" ]]; then
+  alias s="sudo"
+fi
+#---[end: install_config setings]---

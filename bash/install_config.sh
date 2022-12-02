@@ -11,8 +11,8 @@ VERSION="1.0"
 LAST_UPDATED="26-11-2022"
 
 # Cargamos variables y funciones para decorar textos...
-# ADS_TOOLS="/var/shared/antosoft/scripts/ads_tools.sh"
-ADS_TOOLS="ads_tools.sh"
+ADS_TOOLS="/var/shared/antosoft/scripts/ads_tools.sh"
+# ADS_TOOLS="ads_tools.sh"
 if [ ! -f "${ADS_TOOLS}" ]; then
   echo "Error! script library file not found."
   exit 1
@@ -21,6 +21,9 @@ fi
 clear
 script_info
 
+PROFILE_FILE="/etc/profile"
+ALIAS_FILE="/var/shared/antosoft/scripts/alias_list.txt"
+# ALIAS_FILE="alias_list.txt"
 HN=$(hostname -A)
 HOST_NAME="$(cut -d'.' -f1 <<<"$HN")"
 HOST_IP=$(hostname -i)
@@ -56,6 +59,7 @@ if [ -z "$PAKMAN" ]; then
 fi
 
 # Params...
+SET_ALIASES="yes"
 SET_HOSTNAME="yes"
 SET_LOCALE="yes"
 M_COMMANDER="yes"
@@ -67,6 +71,7 @@ UPDATE="yes"
 for x in "$@"; do
   case $x in
     -d=*)
+      SET_ALIASES="${x#*=}"
       SET_HOSTNAME="${x#*=}"
       SET_LOCALE="${x#*=}"
       M_COMMANDER="${x#*=}"
@@ -82,6 +87,10 @@ done
 
 for i in "$@"; do
   case $i in
+    -a=*|--aliases=*)
+      SET_ALIASES="${i#*=}"
+      shift
+      ;;
     -h=*|--hostname=*)
       SET_HOSTNAME="${i#*=}"
       shift
@@ -123,8 +132,9 @@ for i in "$@"; do
       fi
 
       set_clr "${CYAN}" 
-      msg "Options (Default all $(t 'yes' ${B_WHITE}); Set $(t 'no' ${B_WHITE}) to skip):"
+      msg "Options (Default all $(t 'y|yes' ${B_WHITE}); Set $(t 'n|no' ${B_WHITE}) to skip):"
       msg "  $(t -d ${B_WHITE}) (initial value for all)"
+      msg "  $(t -a ${B_WHITE}), $(t --aliases ${B_WHITE})"
       msg "  $(t -h ${B_WHITE}), $(t --hostname ${B_WHITE})"
       msg "  $(t -l ${B_WHITE}), $(t --locale ${B_WHITE})"
       msg "  $(t -m ${B_WHITE}), $(t --mcommander ${B_WHITE})"
@@ -141,13 +151,26 @@ for i in "$@"; do
   esac
 done
 
-# if [[ "${SET_HOSTNAME}" == "yes" ]]; then
+
+if [[ "yes|y" == *"${SET_ALIASES}"* ]]; then
+  if [ -f "${PROFILE_FILE}" ] && [ -f "${ALIAS_FILE}" ]; then
+    set_clr "${B_CYAN}"; msg "Setting aliases in: $(t $PROFILE_FILE ${B_WHITE})"
+
+    dataInsert=$(cat "${ALIAS_FILE}")
+    outputFile=$(replace "${PROFILE_FILE}" "profile" "_tmp_profile" "")
+    insertdata_tofile "${PROFILE_FILE}" "${dataInsert}" "${outputFile}"
+    
+    if [ -f "${outputFile}" ]; then
+      mv -f "${outputFile}" "${PROFILE_FILE}"
+    fi
+  fi
+fi
+
 if [[ "yes|y" == *"${SET_HOSTNAME}"* ]]; then
   set_clr "${B_CYAN}"; msg "Setting hostname: $(t $HOST_NAME ${B_WHITE})"
   echo $HOST_NAME > /etc/hostname
 fi
 
-# if [[ "${SET_LOCALTIME}" == "yes" ]]; then
 if [[ "yes|y" == *"${SET_LOCALTIME}"* ]]; then
   set_clr "${B_CYAN}"; msg "Setting timezone: $(t 'America/Asuncion' ${B_WHITE})"
 
@@ -155,14 +178,12 @@ if [[ "yes|y" == *"${SET_LOCALTIME}"* ]]; then
   ln -s /usr/share/zoneinfo/America/Asuncion /etc/localtime
 fi
 
-# if [[ "${UPDATE}" == "yes" ]]; then
 if [[ "yes|y" == *"${UPDATE}"* ]]; then
   set_clr "${B_CYAN}"; msg "Updating packages..."
   # dnf/yum/apt-get update -y
   $PAKMAN update -y
 fi
 
-# if [[ "${SET_LOCALE}" == "yes" ]]; then
 if [[ "yes|y" == *"${SET_LOCALE}"* ]]; then
   set_clr "${B_CYAN}"; msg "Installing language packs..."
   # dnf/yum install glibc-langpack-es  -y
@@ -189,7 +210,6 @@ if [[ "yes|y" == *"${SET_LOCALE}"* ]]; then
   localectl set-locale LC_IDENTIFICATION=es_PY.UTF-8
 fi
 
-# if [[ "${SSH_SERVER}" == "yes" ]]; then
 if [[ "yes|y" == *"${SSH_SERVER}"* ]]; then
   set_clr "${B_CYAN}"; msg "Installing ssh server..."
 
@@ -207,7 +227,6 @@ if [[ "yes|y" == *"${SSH_SERVER}"* ]]; then
   #systemctl restart "$SSH_SERVICE"
 fi
 
-# if [[ "${SSH_GENKEYS}" == "yes" ]]; then
 if [[ "yes|y" == *"${SSH_GENKEYS}"* ]]; then
   set_clr "${B_CYAN}"; msg "Generating openssh keys..."
   rm -fr /etc/ssh/bk
@@ -230,7 +249,6 @@ if [[ "yes|y" == *"${SSH_GENKEYS}"* ]]; then
   ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -q -N ""
 fi
 
-# if [[ "${M_COMMANDER}" == "yes" ]]; then
 if [[ "yes|y" == *"${M_COMMANDER}"* ]]; then
   set_clr "${B_CYAN}"; msg "Installing Midnight Commander for $(t $OS_NAME ${B_WHITE})"
 
@@ -247,7 +265,6 @@ if [[ "yes|y" == *"${M_COMMANDER}"* ]]; then
   fi
 fi
 
-# if [[ "${NANO_EDITOR}" == "yes" ]]; then
 if [[ "yes|y" == *"${NANO_EDITOR}"* ]]; then
   set_clr "${B_CYAN}"; msg "Searching for Nano Editor installed..."
   

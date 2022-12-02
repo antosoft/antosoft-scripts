@@ -86,12 +86,12 @@ SYM_CROSS="${BI_RED}✗${B_RED}"     # Bold Red Error Cross Symbol
 CUR_CLR=""                         # Current Color Set
 HOLD="-"
 
-# Establece y guarda color actual.
+# Establece y guarda un color.
 set_clr() {
   CUR_CLR="$1"
 }
 
-# Devuelve el color actual.
+# Devuelve el color actual establecido con set_color().
 get_clr() {
   echo "$CUR_CLR"
 }
@@ -482,4 +482,43 @@ smb_user_system() {
     fi
   fi
   echo; return 1;
+}
+
+
+# Inserta una trozo de datos a un archivo, en una seccion delimitada.
+insertdata_tofile() {
+  local inputFile="${1}"
+  local dataInsert="${2}"
+  local outputFile="${3}"
+  local posIni="${4}"
+  local posEnd="${5}"
+
+  if [[ -z "${inputFile}" ]]; then
+    echo "You must enter valid file name as input."; return 1;
+  fi
+  if [ ! -f "${inputFile}" ]; then
+    echo "Input file not found!"; return 1;
+  fi
+  if [[ -z "${outputFile}" ]]; then
+    echo "You must enter valid file name as output."; return 1;
+  fi
+
+  if [[ -z "${posIni}" ]]; then
+    posIni="#---[begin: install_config setings]---";
+  fi
+
+  if [[ -z "${posEnd}" ]]; then
+    posEnd="#---[end: install_config setings]---";
+  fi
+
+  awk -v FS='\n' -v data="$dataInsert" -v startMark="$posIni" -v endMark="$posEnd" '
+  BEGIN { cfgInside=0; }
+  {
+    if (cfgInside == 0 && $0 == startMark) { cfgInside=1; } 
+    if (cfgInside == 0) { print $0; }
+    if (cfgInside == 1 && $0 == endMark) { cfgInside=0; }
+  }
+  END { cfgInside=0; print data; }
+
+  ' "$inputFile" > "$outputFile"
 }

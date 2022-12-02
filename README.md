@@ -31,6 +31,8 @@ Enjoy it!
 - group_system()      **# Create, modify, or delete Linux groups.**
 - user_system()       **# Create, modify, or delete Linux users.**
 - smb_user_system()   **# Create, modify or delete Samba users.**
+- insertdata_tofile() **# Insert a chunk of data to a file, in a delimited section.**
+
 
 ### Variable list for colors
 | Regular |   Bold   | Intense  |Bold Intense | Underline | Background | Background Intense |
@@ -125,6 +127,7 @@ Opciones
 
 Options (Default all y|yes; Set n|no to skip):
   -d (initial value for all)
+  -a, --aliases 
   -h, --hostname
   -l, --locale
   -m, --mcommander
@@ -141,6 +144,8 @@ Options (Default all y|yes; Set n|no to skip):
 ./install_config.sh -d="no" -sk="yes" -s="yes"
 
 ```
+*For **--aliases** option: You must create a file containing the code snippet to insert it into "/etc/profile".*
+
 *Important: You must have the configuration for ssh already done by changing the files "ssh_config and sshd_config" as you require and have it saved in a shared folder. Then set it in the script with the variable "SSH_CONFIG" the path of those files.*
 <br><br>
 
