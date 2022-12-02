@@ -113,7 +113,7 @@ Opciones
 <br><br>
 
 
-### **install_config.sh**
+### **[install_config.sh]**
 ### This script I use to install some packages and configure others, it works like a command line with parameters. Some of the options that can be used are the following, by default they are all set to "yes". If you want not to execute some of the options you must set it to "no". You can also set all the options to "no" with "-d" and then set the one you need with "yes" to execute only that option or options.
 
 **Examples:**
