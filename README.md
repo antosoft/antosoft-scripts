@@ -1,4 +1,4 @@
-# AntoSoft Scripts [Bash]
+# AntoSoft|Scripts
 Sometimes I feel very bored repeating the same processes over and over again when creating a new server, whether physical or virtual. Thinking about how to improve this situation, I have created a script that automates some of these processes or at least makes it a bit easier.
 
 I will be adding more scripts over time and/or improving some. **You can also add what you find useful ;)**
@@ -151,7 +151,7 @@ Options (Default all y|yes; Set n|no to skip):
 
 
 ## Author
-[antosoft](https://github.com/antosoft)
+[Antonio da Silva](https://github.com/antosoft)
 
 ## License
 [ISC License](https://github.com/antosoft/antosoft-scripts/raw/main/LICENSE)
