@@ -253,7 +253,7 @@ main() {
   do
     # echo "Procesando: $line"
     # Saltamos comentarios o lineas en blanco...
-    if [[ -z "${line}" ]] || [[ "#" == *"${line}"* ]]; then
+    if [[ -z "${line}" ]] || [[ ${line:0:1} == "#" ]]; then
       continue
     fi
 
@@ -296,4 +296,6 @@ main() {
 # Ejecutamos funcion principal...
 main "${1}" "${2}"
 
-msg_ok "Proceso completado!"
+if [[ $? == 0 ]]; then
+  msg_ok "Proceso completado!"
+fi

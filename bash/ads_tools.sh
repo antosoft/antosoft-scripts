@@ -195,6 +195,9 @@ proper() {
 substr() {
   echo "$1"| cut -d"$2" -f $(("$3"))
 }
+substring() {
+  echo ${1} | awk -F${2} -v pos="$3" '{print $pos}'
+}
 
 # Repite un caracter n veces.
 repeat() {
@@ -521,4 +524,41 @@ insertdata_tofile() {
   END { cfgInside=0; print data; }
 
   ' "$inputFile" > "$outputFile"
+}
+
+
+# Inserta un prompt de interaccion con el usuario segun parametros.
+prompt() {
+  local promptResponse
+  local promptText="${1}"
+  local promptOptions="${2}"
+  local promptColor1="${3}"
+  local promptColor2="${4}"
+  local extraOpt=""
+  
+  if [ -z "$promptText" ]; then
+    promptText="Prompt: "
+  fi
+  if [ -z "$promptOptions" ]; then
+    promptOptions="y|n"
+    extraOpt="yy|nn"
+  fi
+  if [ -z "$promptColor1" ]; then
+    promptColor1="${B_CYAN}";
+  fi
+  if [ -z "$promptColor2" ]; then
+    promptColor2=${B_WHITE}
+  fi
+
+  printf -v _text "${promptColor1}${promptText} ${promptColor2}[${promptOptions}]${promptColor1}:${CLR_OFF}"
+  while true; do
+      read -r -p "$_text" promptResponse
+      if [[ "${promptOptions}" == *"${promptResponse}"* ]]; then      
+        break;
+      fi
+      if [[ "${extraOpt}" != "" && "${extraOpt}" == *"${promptResponse}"* ]]; then
+        break;
+      fi
+  done
+  echo -e "${promptResponse}";
 }
